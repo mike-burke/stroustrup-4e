@@ -3,6 +3,7 @@
 #import <iostream>
 #import <vector>
 
+
 struct Stat {
 	Stat() : age {0} {} 
 	Stat(std::string n, int a) : name{n}, age{a} {}
@@ -50,6 +51,8 @@ std::istream& operator >> (std::istream& is, Stats& ss) {
 		ss.add_stat(s);
 	return is;
 }
+
+
 
 int main() {
 
