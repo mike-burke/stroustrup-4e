@@ -1,28 +1,38 @@
 _When first reading this chapter, keep a record of information that was new or surprising to you. Later, use that list to focus your further studies._
 
-* string types can be concatenated via operator +()
-* char will implicitly convert to int (thanks to C)
-* reading from an inputstream returns a predicate that can be used in if statements
-	```if (is>>c)```
-* this is a nice concise way of reading + validating input streams
-	```if (is>>c && c=='{' && is>>c2 && c2=="")```
-* structs can be initialized memberwise:
-	``` Entry e {name,number};```
-* setstate(ios::failbit) to mark inputstream as corrupt/failed
-* ```is >> c``` will skip whitespace by default
-* this is a nice idiom for reading multiple entries:
-	```for (Entry ee; cin >> ee;) {...} ```
-* containers can be initialized like this:
-	```Vector<Entry> v = { {name,number}, {name,number} ...}```
-* ```vector``` is not range checked
-* the ```list``` is doubly linked
-* iterators are semi-closed ranges [b,e) - end is one-past the last element
-* the ```map``` is a (sorted) search tree, not a hash map - use ```unorderd_map``` for that
-* container library naming convention:
-	* multiX - an X where values (or keys) are non-unique
-	* unorderedX - an X where values are not ordered
-* use ```back_inserter``` to add items to the back of a collection - it is an example of an 'insert iterator'
-* an ```ostream_iterator``` can be assigned to in order to write values: ```*os = "my string"```, but you have to increment the iterator after each write (```++os```)
-* lambda syntax: ```[] (params) { ...code ... }```
+* classes that encapsulate a pointer or some other dynamically allocated resource are referred to as 'handle' types
 
+* RAII (Resource Acquisition Is Initialization) names the idiom used to obtain resources in the ctor and release them in the dtor
 
+* ```std::initializer_list<T>``` can be passed to a ctor to support ```{ x, y, z }``` initialization syntax 
+
+* virtual method calls are generally resolved through a vtbl (virtual lookup table) - each object carries a pointer to the vtbl; the vtbl is lookup table of method name to pointer-to-method. The table is consulted at runtime.
+
+* move semantics allow for a 'rvalue' to be reallocated through assignment - for example, when returning a local object from a function by value (```x = f()```), or assigning the result of a +/- operation (```x = a+b```) 
+
+* specifically, move semantics mean that for the state of the 'temporary' object is 're-wrapped' by the receiving object - no copy needed, no pass-by-reference or pass-by-pointer needed
+
+* move semantics are supported through move ctor ```Type(Type&& t)```
+
+* ```std:move(T)``` creates an rvalue suitable for passing to a move ctor for the provided object
+
+* it is a compile-time error for a class to have a dtor without copy/assignment implementations
+
+* copy + move ctors and assignment operations in abstract classes are problematic - they are not invoked dynamically based on the contents of the passed-in parameter  - ```Shape(Shape& c)``` will create a shape, not a Square, Circle, etc. 
+
+* use ```= delete;``` against copy/move/assignment methods in class definitions to prevent the generation of default implementations by the compiler. This can be used for any operation.
+
+* ```template <typename T>``` is the prefix for templatized functions, classes, etc
+
+* Lambda expressions: ```[] (params) { ... }```
+	* ```[&]``` - capture local names by reference
+	* ```[=]``` - capture local names by copying
+	* ```[&x, &y]``` - capture specific names only
+	* ```[]``` - capture nothing
+
+* Variadic templates - open-ended list of  arguments passed to a template that can be used through recursion:
+	* ```template<Typename H, Typename... Tail> f(H head, Tail tail) { ... ; f(tail);}```
+
+* Tyname aliases can be templatized:
+	* ```template<typename T> using my_type = typename T::the_type;```
+	* which can be used to do: ```my_type<N>``` - refer to types within a templatized type consistency - iterators, value-types, etc
